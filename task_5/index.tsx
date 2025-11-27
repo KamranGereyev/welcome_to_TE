@@ -1,12 +1,3 @@
-'use client';
-
-import { useState } from 'react';
-import useSWR from 'swr';
-
-import styles from './page.module.css';
-
-import { fetchOnePost } from '@/libs/fetchOnePost';
-
 const ComponentOne = () => {
     const { data } = useSWR('custom_key_1', fetchOnePost);
     //...some logic
@@ -23,7 +14,11 @@ const ComponentOne = () => {
 };
 
 const ComponentTwo = () => {
-    const { data } = useSWR('custom_key_2', () => fetchOnePost({ delayMS: 2000 }));
+    const { data } = useSWR(
+        'custom_key_1', // <-- тот же ключ, что и в ComponentOne
+        () => fetchOnePost({ delayMS: 2000 })
+        // опционально можно передать сюда ещё options, например revalidateOnMount: false
+    );
     //...some logic
 
     return data ? (
@@ -37,21 +32,3 @@ const ComponentTwo = () => {
     );
 };
 
-export default function Home() {
-    const [showComponentTwo, setShowComponentTwo] = useState(false);
-
-    return (
-        <main className={styles.main}>
-            <div className={styles.description}>
-                <ComponentOne />
-                {showComponentTwo ? (
-                    <ComponentTwo />
-                ) : (
-                    <button className={styles.btn} onClick={() => setShowComponentTwo(true)}>
-                        Show ComponentTwo
-                    </button>
-                )}
-            </div>
-        </main>
-    );
-}

@@ -1,48 +1,46 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-export const Block1 = ({ mouseEnterCallbak, imgSrc, imgAlt }) => {
+// Базовый переиспользуемый блок
+const BaseBlock = ({ mouseEnterCallback, children }) => {
   const [isActive, setActive] = useState(false);
 
   const mouseEnterHandler = () => {
-    setActive(true);
-    mouseEnterCallbak();
+    if (!isActive) {
+      setActive(true);
+    }
+    mouseEnterCallback && mouseEnterCallback();
   };
 
   return (
-    <div onMouseEnter={mouseEnterHandler} className={isActive ? "active" : ""}>
-      <img src={imgSrc} alt={imgAlt} />
+    <div onMouseEnter={mouseEnterHandler} className={isActive ? 'active' : ''}>
+      {children}
     </div>
+  );
+};
+
+// Обёртка для сохранения исходного API (mouseEnterCallbak, а не mouseEnterCallback)
+export const Block1 = ({ mouseEnterCallbak, imgSrc, imgAlt }) => {
+  return (
+    <BaseBlock mouseEnterCallback={mouseEnterCallbak}>
+      <img src={imgSrc} alt={imgAlt} />
+    </BaseBlock>
   );
 };
 
 export const Block2 = ({ mouseEnterCallbak, content }) => {
-  const [isActive, setActive] = useState(false);
-
-  const mouseEnterHandler = () => {
-    setActive(true);
-    mouseEnterCallbak();
-  };
-
   return (
-    <div onMouseEnter={mouseEnterHandler} className={isActive ? "active" : ""}>
+    <BaseBlock mouseEnterCallback={mouseEnterCallbak}>
       <p>{content}</p>
-    </div>
+    </BaseBlock>
   );
 };
 
 export const Block3 = ({ mouseEnterCallbak, userData }) => {
-  const [isActive, setActive] = useState(false);
-
-  const mouseEnterHandler = () => {
-    setActive(true);
-    mouseEnterCallbak();
-  };
-
   return (
-    <div onMouseEnter={mouseEnterHandler} className={isActive ? "active" : ""}>
+    <BaseBlock mouseEnterCallback={mouseEnterCallbak}>
       <address>
         country: {userData.country}, street: {userData.street}
       </address>
-    </div>
+    </BaseBlock>
   );
 };
